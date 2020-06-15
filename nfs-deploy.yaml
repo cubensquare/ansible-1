@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-nfspv
+  labels:
+    app: nfsnginx
+spec:
+  selector:
+    matchLabels:
+      app: nfsnginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfsnginx
+    spec:
+      containers:
+        - image: nginx
+          name: nfscontainer
+          ports:
+          - containerPort: 80
+          volumeMounts:
+            - name: nfspv-storage
+              mountPath: /usr/share/nginx/html
+      volumes:
+          - name: nfspv-storage
+            persistentVolumeClaim:
+              claimName: nfspvclaim
